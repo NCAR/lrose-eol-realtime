@@ -85,6 +85,7 @@ Precip-24Hr  Precip-24Hr  $(DATA_DIR)/mdv/precip/24hr/mosaic&precip     precip_c
 Rate-1Hr     Rate-1Hr     $(DATA_DIR)/mdv/precip/1hr/mosaic&rate        precip_color   mm      0  1000  50 dcont   1 0
 VIL          VIL          $(DATA_DIR)/mdv/vil/mosaic&vil     vil_color       g/m2    0  1000  50 dcont   1 0
 dVIL         dVIL         $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
+=======      ========     $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
  
 DBZ_KFTG      DBZ_KFTG     mdvp:://localhost:0:$(DATA_DIR)/cfradial/kftg&DBZ     dbz.colors    dBZ    -5   80  5  dcont   1 0
 VEL_KFTG      VEL_KFTG     mdvp:://localhost:0:$(DATA_DIR)/cfradial/kftg&VEL     vel.colors    m/s    -5   80  5  dcont   1 0
@@ -334,7 +335,7 @@ cidd.request_compressed_data: 1
 #
 # Sets the projection for cidd's plan view - Current valid choices are:
 # CARTESIAN, LAT_LON, LAMBERT,  STEREOGRAPHIC
-cidd.projection_type:    LATLON
+cidd.projection_type:    CARTESIAN
 
 # These must be set if using a Lambert conformal projection - Ignored otherwise
 cidd.lambert_lat1: 20.0
@@ -397,25 +398,67 @@ cidd.xsect_start_page:      1
 
 #
 # The Outer most domain:
-cidd.num_zoom_levels:       1
-cidd.start_zoom_level:      2
+cidd.num_zoom_levels:       8
+cidd.start_zoom_level:      3
 #
 # Note, the Domain labels are used for automated output imagery.
 # It's suggested that names without spaces be used when running
 # in.
 #
-cidd.level1_label:              FULL DOMAIN
-cidd.level1_min_xkm:                -106.0
-cidd.level1_min_ykm:                 37.5.0
-cidd.level1_max_xkm:                -102
-cidd.level1_max_ykm:                 41.5
 #
-cidd.level2_label:              REGIONAL DOMAIN
-cidd.level2_min_xkm:                -200.0
-cidd.level2_min_ykm:                -200.0
-cidd.level2_max_xkm:                200.0
-cidd.level2_max_ykm:                200.0
+# Note, the Domain labels are used for automated output imagery.
+# It's suggested that names without spaces be used when running
+# in.
 #
+cidd.level1_label:                  40km
+cidd.level1_min_xkm:                -40.0
+cidd.level1_min_ykm:                -40.0
+cidd.level1_max_xkm:                40.0
+cidd.level1_max_ykm:                40.0
+#
+cidd.level2_label:                  75km
+cidd.level2_min_xkm:                -75.0
+cidd.level2_min_ykm:                -75.0
+cidd.level2_max_xkm:                75.0
+cidd.level2_max_ykm:                75.0
+#
+#
+cidd.level3_label:                  150km
+cidd.level3_min_xkm:                -150.0
+cidd.level3_min_ykm:                -150.0
+cidd.level3_max_xkm:                150.0
+cidd.level3_max_ykm:                150.0
+#
+#
+cidd.level4_label:                  240km
+cidd.level4_min_xkm:                -240.0
+cidd.level4_min_ykm:                -240.0
+cidd.level4_max_xkm:                240.0
+cidd.level4_max_ykm:                240.0
+#
+cidd.level5_label:                  300km
+cidd.level5_min_xkm:                -300.0
+cidd.level5_min_ykm:                -300.0
+cidd.level5_max_xkm:                300.0
+cidd.level5_max_ykm:                300.0
+#
+cidd.level6_label:                  500km
+cidd.level6_min_xkm:                -500.0
+cidd.level6_min_ykm:                -500.0
+cidd.level6_max_xkm:                500.0
+cidd.level6_max_ykm:                500.0
+#
+cidd.level7_label:                  1000km
+cidd.level7_min_xkm:                -1000.0
+cidd.level7_min_ykm:                -1000.0
+cidd.level7_max_xkm:                1000.0
+cidd.level7_max_ykm:                1000.0
+#
+cidd.level8_label:                  2000km
+cidd.level8_min_xkm:                -2000.0
+cidd.level8_min_ykm:                -2000.0
+cidd.level8_max_xkm:                2000.0
+cidd.level8_max_ykm:                2000.0
 #
 #
 
@@ -445,8 +488,8 @@ cidd.max_adeg:               360.0
 
 # List of comma delimited local directories or HTTP URLs to search
 # Searchs . then each directory/URL in order 
-cidd.color_file_subdir:   $(PROJ_DIR)/display/color_scales
-cidd.map_file_subdir:     $(PROJ_DIR)/display/maps
+cidd.color_file_subdir:   $(HOME)/git/lrose-displays/color_scales
+cidd.map_file_subdir:     $(HOME)/git/lrose-displays/maps
 
 #
 # Station locator features
@@ -1118,7 +1161,7 @@ prod_info = {
     url = "spdbp:AcTrack2Symprod://localhost::spdb/ac_posn",
     data_type = 0,
     render_type = RENDER_ALL,
-    on_by_default = TRUE,
+    on_by_default = FALSE,
     minutes_allow_before = 10.0,
     minutes_allow_after = 0.0,
     text_off_threshold = 0,

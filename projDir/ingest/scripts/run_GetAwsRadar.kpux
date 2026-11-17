@@ -11,7 +11,6 @@ if ($status == 1) then
   GetAwsRadar.py --radarName $RADAR_NAME --debug \
     --realtime \
     --outputDir $DATA_DIR/raw/radar \
-    --tmpDir /tmp/raw/radar \
     --lookbackSecs 3600 \
     --sleepSecs 15 \
       |& LogFilter -d $ERRORS_LOG_DIR -p GetAwsRadar -i $RADAR_NAME \

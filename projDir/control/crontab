@@ -35,3 +35,13 @@
 # backup weather station data from S-Pol
 #*/10 * * * *   csh -c "rsync_nidas.spol" 1> /dev/null 2> /dev/null
 #
+####################################################################
+# RADAR INGEST FROM AWS
+#
+*/1 * * * *   csh -c "run_GetAwsRadar.kftg" 1> /dev/null 2> /dev/null
+*/1 * * * *   csh -c "run_GetAwsRadar.kcys" 1> /dev/null 2> /dev/null
+*/1 * * * *   csh -c "run_GetAwsRadar.kpux" 1> /dev/null 2> /dev/null
+*/1 * * * *   csh -c "run_GetAwsRadar.kgld" 1> /dev/null 2> /dev/null
+*/1 * * * *   csh -c "run_GetAwsRadar.kgjx" 1> /dev/null 2> /dev/null
+#
+####################################################################
