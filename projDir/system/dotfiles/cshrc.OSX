@@ -62,7 +62,6 @@ setenv CC gcc
 setenv DATA_HOST localhost
 setenv PROJ_DIR $HOME/projDir
 setenv DATA_DIR $PROJ_DIR/data
-setenv RAP_DATA_DIR $DATA_DIR
 setenv PROCMAP_HOST localhost
 setenv DATA_MAPPER_ACTIVE true
 setenv LDATA_FMQ_ACTIVE true
