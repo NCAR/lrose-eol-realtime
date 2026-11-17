@@ -6,7 +6,6 @@
 #
 # ========================================================================== #
 
-from __future__ import print_function
 import os
 import sys
 from optparse import OptionParser
@@ -42,12 +41,12 @@ def main():
     # debug print
 
     if (options.debug):
-        print("Running script: ", os.path.basename(__file__), file=sys.stderr)
-        print("  Options:", file=sys.stderr)
-        print("    Debug: ", options.debug, file=sys.stderr)
-        print("    Verbose: ", options.verbose, file=sys.stderr)
-        print("    Template dir: ", options.templateDir, file=sys.stderr)
-        print("    Install dir: ", options.installDir, file=sys.stderr)
+        print >>sys.stderr, "Running script: ", os.path.basename(__file__)
+        print >>sys.stderr, "  Options:"
+        print >>sys.stderr, "    Debug: ", options.debug
+        print >>sys.stderr, "    Verbose: ", options.verbose
+        print >>sys.stderr, "    Template dir: ", options.templateDir
+        print >>sys.stderr, "    Install dir: ", options.installDir
 
     # make the install dir
 
@@ -55,8 +54,8 @@ def main():
         os.makedirs(options.installDir)
     except OSError as exc:
         if (options.verbose):
-            print("WARNING: trying to create install dir", file=sys.stderr)
-            print("  ", exc, file=sys.stderr)
+            print >>sys.stderr, "WARNING: trying to create install dir"
+            print >>sys.stderr, "  ", exc
 
     # Walk the template directory tree
 
@@ -73,8 +72,8 @@ def main():
 def handleParamFile(dirPath, paramFileName):
 
     if (options.debug):
-        print("Handling param file, dir, paramFile: ", \
-            dirPath, ", ", paramFileName, file=sys.stderr)
+        print >>sys.stderr, "Handling param file, dir, paramFile: ", \
+            dirPath, ", ", paramFileName
 
     # compute sub dir
 
@@ -85,8 +84,8 @@ def handleParamFile(dirPath, paramFileName):
     installSubDir = options.installDir + subDir
 
     if (options.debug):
-        print("subDir: ", subDir, file=sys.stderr)
-        print("installSubDir: ", installSubDir, file=sys.stderr)
+        print >>sys.stderr, "subDir: ", subDir
+        print >>sys.stderr, "installSubDir: ", installSubDir
 
     # make the install sub dir and go there
 
@@ -95,8 +94,6 @@ def handleParamFile(dirPath, paramFileName):
     except OSError as exc:
         pass
 
-    if (options.debug):
-        print("os.chdir: ", installSubDir, file=sys.stderr)
     os.chdir(installSubDir)
 
     # remove the link if it exists
@@ -118,17 +115,17 @@ def handleParamFile(dirPath, paramFileName):
 def runCommand(cmd):
 
     if (options.verbose == True):
-        print("running cmd:",cmd, file=sys.stderr)
+        print >>sys.stderr, "running cmd:",cmd
     
     try:
         retcode = subprocess.call(cmd, shell=True)
         if retcode < 0:
-            print("Child was terminated by signal: ", -retcode, file=sys.stderr)
+            print >>sys.stderr, "Child was terminated by signal: ", -retcode
         else:
             if (options.verbose == True):
-                print("Child returned code: ", retcode, file=sys.stderr)
-    except OSError as e:
-        print("Execution failed:", e, file=sys.stderr)
+                print >>sys.stderr, "Child returned code: ", retcode
+    except OSError, e:
+        print >>sys.stderr, "Execution failed:", e
 
 ########################################################################
 # Run - entry point

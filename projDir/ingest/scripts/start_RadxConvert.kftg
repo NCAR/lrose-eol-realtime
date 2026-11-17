@@ -2,8 +2,8 @@
 
 cd $PROJ_DIR/ingest/params
 
-setenv radar_name kftg
 setenv RADAR_NAME KFTG
+setenv radar_name kftg
 
 running "RadxConvert -instance $radar_name"
 

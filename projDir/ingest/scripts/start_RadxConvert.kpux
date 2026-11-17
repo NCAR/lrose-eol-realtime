@@ -2,8 +2,8 @@
 
 cd $PROJ_DIR/ingest/params
 
-setenv radar_name kpux
 setenv RADAR_NAME KPUX
+setenv radar_name kpux
 
 running "RadxConvert -instance $radar_name"
 
