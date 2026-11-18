@@ -732,12 +732,12 @@ output_std_parallels = {
 //
 
 output_grid = {
-    nx = 400,
-    ny = 400,
+    nx = 1000,
+    ny = 1000,
     nz = 30,
-    minx = -106.0,
-    miny = 37.5,
-    minz = $(CART_GRID_START_HT),
+    minx = -110.0,
+    miny = 37.0,
+    minz = 2.0,
     dx = 0.01,
     dy = 0.01,
     dz = 0.5

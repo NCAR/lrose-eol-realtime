@@ -247,12 +247,12 @@ cidd.update_interval:      30
 
 #  Number of seconds to wait for data to come in before giving up
 #  On very slow networks this may need to go as high as 180 seconds!
-cidd.data_timeout_secs: 40
+cidd.data_timeout_secs: 20
 
 # Length of time to wait before killing simple external commands
 # Used When running single image convert scripts and driving
 # Browsers to web pages.
-cidd.simple_command_timeout_secs: 30
+cidd.simple_command_timeout_secs: 20
 
 # Length of time to wait before killing complex external commands
 # Used when spawining animation building script
@@ -310,7 +310,7 @@ cidd.add_valid_time_to_filename: 0
 
 # Set the format for the time fields in the names of output xwd images.
 # See strftime(3) for options.  Default is: %H%M
-cidd.movieframe_time_format:  %H%M
+cidd.movieframe_time_format:  %H%M%S
 
 # This script will be exec'd if set whenever an html_mode image is output.
 # The full path name of the xwd image will be sent as the script argument
@@ -627,7 +627,7 @@ cidd.latlon_mode:        0
 # Set the format for the time strings. See 'man strftime' for format options.
 # Can add additional text as part of the Time string.
 # Default is: "%m/%d/%Y %H:%M:%S"
-cidd.label_time_format:  %Y/%m/%d %H:%M
+cidd.label_time_format:  %Y/%m/%d %H:%M:%S
 
 # Plot a Legend for each Grid overlay; 0=Off, 1=On
 cidd.layer_legends_on: 1  
@@ -678,8 +678,8 @@ cidd.horiz_default_x_pos:     0
 cidd.horiz_default_y_pos:     0
 
 cidd.horiz_top_margin:        20
-cidd.horiz_bot_margin:        20
-cidd.horiz_left_margin:       20
+cidd.horiz_bot_margin:        40
+cidd.horiz_left_margin:       40
 cidd.horiz_right_margin:      60
 
 cidd.vert_min_height:        120
