@@ -1145,7 +1145,7 @@ debug = DEBUG_OFF;
 prod_info = {
   {
     menu_label = "Titan Storm Detections",
-    url = "spdbp:Tstorms2Symprod:basic//localhost::spdb/tstorms",
+    url = "spdbp:Tstorms2Symprod:basic//localhost::spdb/tstorms/mosaic",
     data_type = 0,
     render_type = RENDER_FIRST_BEFORE_DATA_TIME,
     on_by_default = TRUE,
