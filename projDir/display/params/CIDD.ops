@@ -666,7 +666,7 @@ cidd.bot_margin_render_style: 2
 #
 cidd.horiz_legends_start_x:  30
 cidd.horiz_legends_start_y:  30
-cidd.horiz_legends_delta_y:  30
+cidd.horiz_legends_delta_y:  40
 
 #
 # WINDOW SIZE PARAMS

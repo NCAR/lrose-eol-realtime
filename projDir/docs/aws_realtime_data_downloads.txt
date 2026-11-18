@@ -1,0 +1,160 @@
+AWS REALTIME DATA DOWNLOADS FOR NEXRAD, MRMS, GOES ABI, AND GOES GLM
+========================================================================
+
+Purpose
+-------
+
+GetAwsRadar.py downloads NEXRAD Level-II volumes from an anonymous public
+Amazon S3 bucket.  Its basic approach is also suitable for MRMS, GOES ABI
+visible/infrared imagery, and GOES Geostationary Lightning Mapper (GLM)
+data:
+
+  * list objects under a time-specific S3 prefix;
+  * parse the observation time from each object name;
+  * reject objects outside the requested interval;
+  * download through anonymous HTTPS to a temporary file;
+  * atomically publish the completed local file; and
+  * use LdataWriter when an LROSE reader relies on _latest_data_info.
+
+The transport code can be shared, but the bucket, prefix layout, filename
+parser, product selection, decompression, output layout, and LdataWriter
+metadata are dataset-specific.  Separate thin downloaders backed by a shared
+public-S3 module are preferable to nearly identical copies of one large
+script.
+
+Public datasets
+---------------
+
+NEXRAD Level II
+
+  Bucket: unidata-nexrad-level2
+  Example prefix: YYYY/MM/DD/KFTG/
+  Format: native NEXRAD Level-II volume files
+
+MRMS
+
+  Bucket: noaa-mrms-pds
+  Registry: https://registry.opendata.aws/noaa-mrms-pds/
+  Update cycle: approximately two minutes for common realtime products
+
+  MRMS is organized first by domain and then by product.  For example:
+
+    CONUS/MergedReflectivityQCComposite_00.50/YYYYMMDD/
+    MRMS_MergedReflectivityQCComposite_00.50_YYYYMMDD-HHMMSS.grib2.gz
+
+  A downloader should require an explicit domain and product.  Downloading
+  "all MRMS" would encompass hundreds of products and vertical levels.  A
+  three-dimensional reflectivity ingest must retrieve each required height
+  prefix, whereas a composite ingest needs only the composite product.
+
+  AWS MRMS files are gzip-compressed GRIB2.  Unless the selected LROSE reader
+  is verified to read gzip directly, download and decompress to a temporary
+  file, then atomically publish a .grib2 file.  Existing project consumers
+  include MrmsGribIngest and the Grib2toMdv MRMS configurations under
+  ingest/params.
+
+GOES ABI visible and infrared
+
+  GOES-East bucket: noaa-goes19
+  GOES-West bucket: noaa-goes18
+  Registry: https://registry.opendata.aws/noaa-goes/
+  Key documentation:
+    https://github.com/NOAA-Big-Data-Program/nodd-data-docs/blob/main/GOES/README.md
+
+  GOES keys use year, three-digit day of year, and hour:
+
+    <product>/YYYY/DDD/HH/<filename>
+
+  Useful ABI Level-1b radiance prefixes are:
+
+    ABI-L1b-RadC/    CONUS sector, normally every five minutes
+    ABI-L1b-RadF/    Full Disk, normally every ten minutes
+    ABI-L1b-RadM/    mesoscale sectors, normally every 30-60 seconds
+
+  The conventional visible and infrared choices are:
+
+    C02    0.64 micrometer red visible, 0.5 km native resolution
+    C13    10.3 micrometer clean longwave infrared, 2 km native resolution
+
+  The downloader must select satellite, sector, processing level, and channel
+  before transferring files.  Full Disk band 02 files can be hundreds of
+  megabytes each, so the CONUS sector should be preferred when it covers the
+  project area.  Existing GoesRnetCDF2Mdv configurations most closely match
+  Level-1b radiance files.  Level-2 CMIP products are another option if the
+  intended reader supports them and calibrated imagery is preferred.
+
+  Names such as "goes16" should not be used as a permanent synonym for
+  GOES-East.  GOES-19 replaced GOES-16 as the operational East satellite in
+  April 2025.  Configuration should distinguish orbital role (East or West)
+  from the actual satellite number.
+
+GOES GLM
+
+  GOES-East bucket: noaa-goes19
+  GOES-West bucket: noaa-goes18
+  Prefix: GLM-L2-LCFA/YYYY/DDD/HH/
+  Format: NetCDF Level-2 events, groups, and flashes
+  Cadence: approximately one file every 20 seconds
+
+  GLM is a direct fit for the existing GoesRGLM2Spdb and LtgSpdb2Mdv chain.
+  Its high file count makes hourly prefix listing essential: a full day has
+  roughly 4,320 objects per satellite.  If East and West data are combined,
+  the overlap and deduplication policy must be defined explicitly.
+
+Operational requirements for new downloaders
+--------------------------------------------
+
+1. Prefix scope
+
+   List the narrowest available time prefix.  GOES ABI and GLM should use an
+   hourly prefix and include the previous hour when the lookback crosses an
+   hour boundary.  NEXRAD and MRMS have daily prefixes, but ListObjectsV2
+   StartAfter can avoid returning objects earlier than the requested start.
+
+2. Failure policy
+
+   Network and server failures must have bounded retries with exponential
+   backoff.  Exhausted retries should fail archive mode with a nonzero status,
+   but a transient failure must not terminate a long-running realtime loop.
+
+3. Publication and integrity
+
+   Download on the same filesystem as the destination, verify Content-Length
+   when supplied, and use os.replace() to publish atomically.  A reader must
+   never observe a partially downloaded file.
+
+4. LdataWriter consistency
+
+   A failed LdataWriter command must be retried.  Merely leaving the data file
+   in place is insufficient because the next poll will otherwise regard it as
+   already downloaded while _latest_data_info remains stale.  Persist a
+   pending-metadata marker before publishing the data file, and remove that
+   marker only after LdataWriter succeeds.
+
+5. Product filtering
+
+   Parse and validate filenames before downloading.  For ABI, filter C02,
+   C13, or another requested channel at listing time.  For NEXRAD, exclude MDM
+   metadata.  Treat all filename timestamps as UTC.
+
+6. Resource control
+
+   Expose lookback, polling interval, request timeout, retry count, and retry
+   delay as validated options.  Avoid repeatedly listing or downloading data
+   outside the interval, especially for ABI and GLM.
+
+7. Satellite transitions
+
+   Satellite number and orbital role must be configurable.  Operational
+   satellite transitions should require configuration changes, not source-code
+   edits, and output names should identify the data's actual platform.
+
+GetAwsRadar_safe.py
+-------------------
+
+ingest/scripts/GetAwsRadar_safe.py is a hardened NEXRAD-only implementation
+of these operational requirements.  It intentionally leaves GetAwsRadar.py
+unchanged so the existing realtime configuration is not altered without an
+explicit deployment decision.  The safe script is a useful starting point for
+the shared S3 transport layer, but MRMS decompression and GOES product/channel
+selection still belong in their respective dataset-specific downloaders.
