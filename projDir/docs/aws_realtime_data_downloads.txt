@@ -149,12 +149,34 @@ Operational requirements for new downloaders
    satellite transitions should require configuration changes, not source-code
    edits, and output names should identify the data's actual platform.
 
-GetAwsRadar_safe.py
--------------------
+GetAwsRadar.py
+--------------
 
-ingest/scripts/GetAwsRadar_safe.py is a hardened NEXRAD-only implementation
-of these operational requirements.  It intentionally leaves GetAwsRadar.py
-unchanged so the existing realtime configuration is not altered without an
-explicit deployment decision.  The safe script is a useful starting point for
-the shared S3 transport layer, but MRMS decompression and GOES product/channel
-selection still belong in their respective dataset-specific downloaders.
+ingest/scripts/GetAwsRadar.py is the hardened NEXRAD-only implementation of
+these operational requirements.  The prior implementation is retained as
+GetAwsRadar.orig.py.  The radar script is also the model for the retry,
+atomic-publication, and pending-LdataWriter behavior in the other AWS
+downloaders.
+
+GetAwsMrms.py
+-------------
+
+ingest/scripts/GetAwsMrms.py implements the MRMS-specific downloader.  One
+process retrieves one exact domain/product prefix.  It defaults to the CONUS
+quality-controlled composite reflectivity product, expands AWS .grib2.gz
+objects, verifies the GRIB signature, publishes YYYYMMDD/file paths atomically,
+and runs LdataWriter against the requested output directory.
+
+For the existing composite-reflectivity processing chain, a typical command is:
+
+  GetAwsMrms.py \
+    --domain CONUS \
+    --product MergedReflectivityQCComposite_00.50 \
+    --outputDir $DATA_DIR/$project/raw/mrms/ReflQcComp \
+    --realtime --lookbackSecs 900 --sleepSecs 15
+
+The output directory is the product directory itself; GetAwsMrms.py does not
+insert an additional domain or product directory.  Multiple products should
+normally use separate output directories and reader instances.  The --keepGzip
+option exists for consumers that explicitly accept gzip, but decompressed GRIB2
+is the default expected by this project's MRMS readers.

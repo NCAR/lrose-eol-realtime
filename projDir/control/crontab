@@ -45,3 +45,8 @@
 */1 * * * *   csh -c "run_GetAwsRadar.kgjx" 1> /dev/null 2> /dev/null
 #
 ####################################################################
+# MRMS INGEST FROM AWS
+#
+*/1 * * * *   csh -c "run_GetAwsMrms.ReflQcComp" 1> /dev/null 2> /dev/null
+#
+####################################################################

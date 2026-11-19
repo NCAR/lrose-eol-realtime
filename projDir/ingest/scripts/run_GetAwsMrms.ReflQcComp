@@ -1,0 +1,20 @@
+#! /bin/csh
+
+# get MRMS data from AWS
+
+cd $PROJ_DIR/ingest/scripts
+setenv PRODUCT MergedReflectivityQCComposite_00.50
+setenv FIELD_NAME ReflQcComp
+
+running "GetAwsMrms.py --product $PRODUCT"
+
+if ($status == 1) then
+  GetAwsMrms.py --product $PRODUCT --debug \
+    --outputDir $DATA_DIR/raw/mrms/$FIELD_NAME \
+    --realtime \
+    --lookbackSecs 900 \
+    --sleepSecs 15 \
+      |& LogFilter -d $ERRORS_LOG_DIR -p GetAwsMrms -i $FIELD_NAME \
+      >& /dev/null &
+endif
+
