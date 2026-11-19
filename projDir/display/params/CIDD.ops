@@ -87,6 +87,13 @@ VIL          VIL          $(DATA_DIR)/mdv/vil/mosaic&vil     vil_color       g/m
 dVIL         dVIL         $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
 =======      ========     $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
  
+MRMS_ReflQcComp MRMS_ReflQcComp $(DATA_DIR)/mdv/mrms/ReflQcComp&CREF_GPML    dbz.colors    dBZ    -5   80  5  dcont   1 0
+=======      ========     $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
+=======      ========     $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
+=======      ========     $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
+=======      ========     $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
+=======      ========     $(DATA_DIR)/mdv/vil/mosaic&dVil    vil_diff_color  g/m2    0  1000  50 dcont   1 0
+
 DBZ_KFTG      DBZ_KFTG     mdvp:://localhost:0:$(DATA_DIR)/cfradial/kftg&DBZ     dbz.colors    dBZ    -5   80  5  dcont   1 0
 VEL_KFTG      VEL_KFTG     mdvp:://localhost:0:$(DATA_DIR)/cfradial/kftg&VEL     vel.colors    m/s    -5   80  5  dcont   1 0
 WIDTH_KFTG    WIDTH_KFTG   mdvp:://localhost:0:$(DATA_DIR)/cfradial/kftg&WIDTH   width.colors  m/s    -5   80  5  dcont   1 0

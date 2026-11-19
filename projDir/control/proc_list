@@ -45,8 +45,12 @@ Radx2Grid      kgjx      start_Radx2Grid.kgjx      snuff_inst  localhost
 # Create mosaic
 #
 MdvMerge2     mosaic     start_MdvMerge2.mosaic    snuff_inst  localhost
+###############################################################################
+# MRMS
+#
+Grib2toMdv    mrms_ReflQcComp start_inst(ingest)   snuff_inst  localhost
 ##############################################################################
-# TITAN ROCESSES
+# TITAN PROCESSES
 #
 Titan        ops       start_Titan.ops              snuff_inst  localhost
 PrecipAccum  single    start_PrecipAccum.single     snuff_inst  localhost
